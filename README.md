@@ -2,6 +2,7 @@ portfoliopy.py
 ================
 
 ## Set up and data
+tl;dr made functions which calculate portfolio returns and backtests portfolio strategies.   
 
 I tested the Python functions in R using the reticulate library. First I
 load the necessary libraries and sources, and then the data I will be
