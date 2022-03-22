@@ -39,7 +39,7 @@ def portfoliosreturns(ww, sreturns, rf=None,port_type="bah",kk=2):
   else:
     nn=len(sreturns.index)
     BB = np.arange(0,nn,kk)
-    BB = np.append(BB,nn+1)
+    BB = np.append(BB,nn)
     sreturns_p_a = pd.Series()
     for ii in range(1,len(BB)):
       sreturns_p_ii=pd.Series(portfoliosreturns(ww,sreturns.iloc[BB[ii-1]:BB[ii],:],rf,"bah"))
@@ -59,18 +59,20 @@ forward=3,kk=2,window_type="tumbling",args=None):
     
   nn=len(sreturns.index)
   if window_type=="tumbling":
-    starts = np.arange(0,nn,forward)
+    starts = np.arange(0,nn-forward,forward)
   else:
-    starts = np.repeat(0,len(np.arange(0,nn,forward)))
+    starts = np.repeat(0,len(np.arange(0,nn-forward,forward)))
 
-  ends = np.arange(back,nn,forward)
-  ends = np.append(ends,nn)
-  
+  ends = starts+back
+
   sreturns_p_a = pd.Series()
-  for ii in range(0,len(starts)-1):
+  for ii in range(0,len(starts)):
     sreturns_in=sreturns.iloc[starts[ii]:ends[ii],:]
     ww_ii=strategy(sreturns_in,args)
-    sreturns_out=sreturns.iloc[ends[ii]:np.minimum((ends[ii]+forward),nn),:]
+    if ii == len(starts)-1:
+      sreturns_out=sreturns.iloc[ends[ii]:nn,:]
+    else: 
+      sreturns_out=sreturns.iloc[ends[ii]:ends[ii]+forward,:]
     sreturns_p_out=pd.Series(portfoliosreturns(ww_ii,sreturns_out,rf,port_type,kk))
     sreturns_p_a=sreturns_p_a.append(sreturns_p_out)
   
@@ -109,28 +111,28 @@ def inv_B_strategy(sreturns,args=None):
   ww=ww/sum(ww)
   return ww
 
-#tests
-x = pd.DataFrame([[1, 6,11],
-              [2, 7,12],
-              [3, 8,13],
-               [4, 9,14],
-               [5, 10,15],
-               [3, 20,7],
-               [2, 3,8],
-               [2, 7,12],
-               [2, 7,13]])
-prices2sreturns(x)
-r=pd.Series([0.5, 0.5, 0.1,-0.5])
-sreturns2wealth(r,1.0)
-np.all(np.isclose(sreturns2wealth(prices2sreturns(r),r[0]),r))
-rs=prices2sreturns(x)
-equal_weights_portfolio(rs)
-equal_weights_portfolio(rs,port_type="bah")
-equal_weights_portfolio(rs,port_type="scr")
-random_strategy(rs,2)
-backtest_strategy(strategy = random_strategy, sreturns = rs,forward=4,args=2)
-backtest_strategy(strategy = inv_V_strategy, sreturns = rs,forward=4,args=None)
-backtest_strategy(strategy = inv_B_strategy, sreturns = rs,forward=4,args=None)
+# #tests
+# x = pd.DataFrame([[1, 6,11],
+#               [2, 7,12],
+#               [3, 8,13],
+#                [4, 9,14],
+#                [5, 10,15],
+#                [3, 20,7],
+#                [2, 3,8],
+#                [2, 7,12],
+#                [2, 7,13]])
+# prices2sreturns(x)
+# r=pd.Series([0.5, 0.5, 0.1,-0.5])
+# sreturns2wealth(r,1.0)
+# np.all(np.isclose(sreturns2wealth(prices2sreturns(r),r[0]),r))
+# rs=prices2sreturns(x)
+# equal_weights_portfolio(rs)
+# equal_weights_portfolio(rs,port_type="bah")
+# equal_weights_portfolio(rs,port_type="scr")
+# random_strategy(rs,2)
+# backtest_strategy(strategy = random_strategy, sreturns = rs,args=2)
+# backtest_strategy(strategy = inv_V_strategy, sreturns = rs,args=None)
+# backtest_strategy(strategy = inv_B_strategy, sreturns = rs,args=None)
 
 
 
