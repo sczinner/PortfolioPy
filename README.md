@@ -51,3 +51,5 @@ legend("top", colnames(ports),col=seq_len(ncol(ports)),cex=0.8,fill=seq_len(ncol
 ```
 
 ![](README_files/figure-gfm/pressure-1.png)<!-- -->
+
+They all perform about the same (although the random portfolios obviously sometimes do better or worse). There is lots of room for more tests with more assets, over longer time periods, and more sophisticated strategies.
