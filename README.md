@@ -21,7 +21,7 @@ matplot(x=1:nrow(prices),y=apply(prices,2,function(x)x/x[1]),col=1:ncol(prices),
 legend("top", colnames(prices),col=seq_len(ncol(prices)),cex=0.8,fill=seq_len(ncol(prices)))
 ```
 
-![](portfoliopymd_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 ## Testing the portfolio functions with the included portfolio functions
 
@@ -49,4 +49,4 @@ matplot(x=1:length(rand.w),y=ports,col=1:ncol(ports),type="l",xlab="index",ylab=
 legend("top", colnames(ports),col=seq_len(ncol(ports)),cex=0.8,fill=seq_len(ncol(ports)))
 ```
 
-![](portfoliopymd_files/figure-gfm/pressure-1.png)<!-- -->
+![](README_files/figure-gfm/pressure-1.png)<!-- -->
