@@ -7,15 +7,14 @@ ew.sr<-equal_weights_portfolio(sr)
 ew.w<-sreturns2wealth(ew.sr)
 points(1:length(ew.w),ew.w,col=5,type="l")
 
-
-random_strategy(sr,as.integer(3))
-
 rand.sr<-backtest_strategy(random_strategy,sr,forward=as.integer(100),args=as.integer(2))
 rand.w<-sreturns2wealth(rand.sr)
-plot(1:length(rand.w),rand.w,type="l")
 
-for(ii in 2:10){
-  rand.sr<-backtest_strategy(random_strategy,sr,forward=as.integer(100),args=as.integer(2))
-  rand.w<-sreturns2wealth(rand.sr)
-  points(1:length(rand.w),rand.w,type="l",col=ii)
-}
+inv.var.sr<-backtest_strategy(inv_V_strategy,sr,forward=as.integer(100),args=NULL)
+inv.var.w<-sreturns2wealth(inv.var.sr)
+
+inv.beta.sr<-backtest_strategy(inv_B_strategy,sr,forward=as.integer(100),args=NULL)
+inv.beta.w<-sreturns2wealth(inv.beta.sr)
+
+ports<-cbind(rand.w,inv.var.w,inv.beta.w,tail(ew.w,length(rand.w))/tail(ew.w,length(rand.w))[1])
+matplot(x=1:length(rand.w),y=ports,col=1:ncol(ports),type="l")

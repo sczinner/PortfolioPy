@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 #import ipdb
-
+#ipdb.set_trace()
 #returns a pandas data frame of simple returns
 #prices is a pandas data frame with columns being asset prices
 def prices2sreturns(prices):
@@ -31,7 +31,7 @@ def portfoliosreturns(ww, sreturns, rf=None,port_type="bah",kk=2):
     sreturns['rf']=rf
   if(port_type=="bah"):
     prices = sreturns.apply(sreturns2wealth)
-    #ipdb.set_trace()
+
     wealth = prices.dot(list(ww))
     sreturns_p = prices2sreturns(wealth)
   elif(port_type=="cr"):
@@ -93,6 +93,23 @@ def equal_weights_portfolio(sreturns,port_type="cr",kk=2):
   dd=np.shape(sreturns)[1]
   return portfoliosreturns(np.repeat(1/dd,dd),sreturns,port_type=port_type,kk=kk)
 
+#1/variance portfolio strategy
+def inv_V_strategy(sreturns,args=None):
+  variances = sreturns.var()
+  return pd.Series(variances/np.sum(variances))
+
+#a naive risk-parity type portfolio strategy
+def inv_B_strategy(sreturns,args=None):
+  ew_sr = equal_weights_portfolio(sreturns)
+  ew_var = np.var(ew_sr)
+  #ew_mu = np.mean(ew_sr)
+  betas = sreturns.apply(lambda x:np.cov(x,ew_sr,rowvar=False)[0,1])/ew_var
+  ww = 1/np.abs(betas)
+  ww = np.clip(ww,0,1)
+  ww=ww/sum(ww)
+  return ww
+
+#tests
 x = pd.DataFrame([[1, 6,11],
               [2, 7,12],
               [3, 8,13],
@@ -112,7 +129,8 @@ equal_weights_portfolio(rs,port_type="bah")
 equal_weights_portfolio(rs,port_type="scr")
 random_strategy(rs,2)
 backtest_strategy(strategy = random_strategy, sreturns = rs,forward=4,args=2)
-
+backtest_strategy(strategy = inv_V_strategy, sreturns = rs,forward=4,args=None)
+backtest_strategy(strategy = inv_B_strategy, sreturns = rs,forward=4,args=None)
 
 
 
