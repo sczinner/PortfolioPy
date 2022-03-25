@@ -1,4 +1,4 @@
-portfoliopy.py
+An example of using portfoliopy.py to backtest portfolio strategies
 ================
 
 ## Set up and data
