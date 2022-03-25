@@ -12,14 +12,10 @@ using
 
 ``` r
 library(reticulate)
-```
-
-    ## Warning: package 'reticulate' was built under R version 4.0.5
-
-``` r
 source_python("portfoliopy.py")
 prices=as.data.frame(EuStockMarkets)
-matplot(x=1:nrow(prices),y=apply(prices,2,function(x)x/x[1]),col=1:ncol(prices),type="l",
+dates=as.vector(time(EuStockMarkets))
+matplot(x=dates,y=apply(prices,2,function(x)x/x[1]),col=1:ncol(prices),type="l",
         xlab="index",ylab="value")
 legend("top", colnames(prices),col=seq_len(ncol(prices)),cex=0.8,fill=seq_len(ncol(prices)))
 ```
@@ -49,7 +45,7 @@ inv.beta.w<-sreturns2wealth(inv.beta.sr)
 
 ports<-cbind(random=rand.w,inv.var=inv.var.w,inv.beta=inv.beta.w,
              ew=tail(ew.w,length(rand.w))/tail(ew.w,length(rand.w))[1])
-matplot(x=1:length(rand.w),y=ports,col=1:ncol(ports),type="l",xlab="index",ylab="value")
+matplot(x=tail(dates,length(rand.w)),y=ports,col=1:ncol(ports),type="l",xlab="date",ylab="value")
 
 legend("top", colnames(ports),col=seq_len(ncol(ports)),cex=0.8,fill=seq_len(ncol(ports)))
 ```
@@ -59,4 +55,4 @@ legend("top", colnames(ports),col=seq_len(ncol(ports)),cex=0.8,fill=seq_len(ncol
 They all perform pretty much identically (although the random portfolios
 obviously sometimes do better or worse). There is lots of room for more
 tests with more assets, over longer time periods, and more sophisticated
-strategies.
+strategies using these backtesting functions.
