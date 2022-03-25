@@ -38,7 +38,7 @@ def portfoliosreturns(ww, sreturns, rf=None,port_type="bah",kk=2):
     sreturns_p = sreturns.dot(list(ww))
   else:
     nn=len(sreturns.index)
-    BB = np.arange(0,nn,kk)
+    BB = np.arange(0,nn-kk,kk)
     BB = np.append(BB,nn)
     sreturns_p_a = pd.Series()
     for ii in range(1,len(BB)):
